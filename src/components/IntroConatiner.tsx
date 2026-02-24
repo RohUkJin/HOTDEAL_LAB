@@ -36,7 +36,7 @@ export default function IntroContainer({ onAIComplete }: IntroContainerProps) {
       <ContentsWrapper>
         <Title>소개</Title>
         <Description>
-          매일 두 번 주요 커뮤니티의 핫딜을 수집하여 광고와 스팸을 제거하고, <strong>네이버 최저가 검증</strong>과 <strong>Gemini 2.5 AI의 심층 분석</strong>을 통해 가성비가 좋은 <strong>핫딜</strong>만을 엄선합니다.
+          매일 두 번 주요 커뮤니티의 핫딜을 수집하여 광고와 스팸을 제거하고, <strong>네이버 최저가 검증</strong>과 <strong>Gemini 3 Flash AI의 분석</strong>을 통해 가성비가 좋은 <strong>핫딜</strong>만을 엄선합니다.
         </Description>
 
         <SubDescription>
@@ -50,37 +50,35 @@ export default function IntroContainer({ onAIComplete }: IntroContainerProps) {
         <DetailToggle onClick={() => setIsDetailsOpen(!isDetailsOpen)}>
           {isDetailsOpen ? '▲ 데이터 처리 기준 접기' : '▼ 데이터 처리 기준 상세보기'}
         </DetailToggle>
-
         <DetailContent $isOpen={isDetailsOpen}>
           <DetailSection>
-            <h4>1. 하드 필터 (Hard Filter) - 비용 절감</h4>
-            <p>AI 분석 전에 명백한 광고나 가치 없는 정보를 즉시 제거하여 API 비용을 아낍니다.</p>
+            <h4>1. 하드 필터 (Hard Filter)</h4>
+            <p>AI 분석 전에 명백한 광고나 가치 없는 정보를 즉시 제거하여 판단 효율을 극대화합니다.</p>
             <ul>
               <li><Red>삭제</Red> 광고, 제휴, 체험단 키워드가 포함된 글</li>
-              <li><Red>삭제</Red> 이미 종료되었거나 품절된 딜 ("종료", "품절")</li>
-              <li><Red>삭제</Red> 사용자 반응이 너무 저조한 글 (댓글 3개 미만)</li>
+              <li><Red>삭제</Red> 이미 종료되었거나 품절된 딜 ("종료", "품절"), 혹은 가격을 알 수 없는 딜</li>
+              <li><Red>삭제</Red> 사용자 반응이 너무 저조한 글 (댓글 3개 미만, 단 작성 30분 이내의 갓 올라온 정보는 예외)</li>
             </ul>
           </DetailSection>
           <DetailSection>
-            <h4>2. 소프트 스코어링 (Soft Scoring) - 가치 평가</h4>
-            <p>단순 필터링을 넘어, 데이터에 가산점을 부여하여 우선순위를 정합니다.</p>
+            <h4>2. 소프트 스코어링 (Soft Scoring)</h4>
+            <p>단순 필터링을 넘어, 조건별 가산·감점을 통해 정말 좋은 조건의 딜인지 1차 검증합니다.</p>
             <ul>
-              <li><Green>가산점</Green> 네이버 최저가보다 15% 이상 저렴한 경우</li>
-              <li><Green>가산점</Green> 게시 직후 반응 속도(댓글/추천 증가율)가 빠른 경우</li>
-              <li><Green>가산점</Green> 생필품 관련 키워드(식품, 휴지 등) 포함 시</li>
+              <li><Green>가산점</Green> 네이버 최저가 대비 15% 이상 압도적으로 저렴한 경우 (반대로 더 비싸면 즉시 탈락)</li>
+              <li><Green>가산점</Green> 게시 직후 반응 속도(댓글/추천 증가율)가 비정상적으로 빠른 경우</li>
+              <li><Green>보정점</Green> "역대급", "무료배송" 등 긍정적 단어는 점수를 올리고, "업자", "바이럴" 의심 단어는 페널티 부여</li>
             </ul>
           </DetailSection>
           <DetailSection>
-            <h4>3. AI 심층 분석 (Gemini 2.5) - 최종 확정</h4>
-            <p>소프트 스코어링 기반으로 남은 데이터들을 LLM이 직접 읽고 판단합니다.</p>
+            <h4>3. AI 심층 분석 (Gemini 3 Flash)</h4>
+            <p>검증을 통과한 알짜배기 딜들을 LLM이 쇼핑 MD처럼 직접 분석하고 판단합니다.</p>
             <ul>
-              <li><Blue>분석</Blue> 댓글의 뉘앙스 파악 ("쟁여둔다", "역대가" 등 긍정 감성)</li>
-              <li><Blue>분석</Blue> 기업 비품으로서의 적합성 여부 판단</li>
-              <li><Blue>판정</Blue> 최종적으로 <strong>HOT / DROP</strong> 상태 판정</li>
+              <li><Blue>분석</Blue> 유저 댓글의 미묘한 뉘앙스 파악 ("쟁여둡니다", "역대가" 등 긍정 반응 확인)</li>
+              <li><Blue>분석</Blue> 식품, 휴지, 사무용품 등 기업 비품이나 생필품으로서의 적합성 여부 판단</li>
+              <li><Blue>판정</Blue> 모든 조건을 만족하는 건만 최종적으로 <strong>HOT / DROP</strong> 상태 판정 후 요약 코멘트 작성</li>
             </ul>
           </DetailSection>
         </DetailContent>
-
         <StatsGrid>
           <StatCard>
             <Label>수집된 사이트</Label>
