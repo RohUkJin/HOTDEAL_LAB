@@ -101,13 +101,14 @@ function AllCardItem({ item, index }: { item: any, index: number }) {
         if (link.includes('11st')) return '11번가';
         if (link.includes('coupang')) return '쿠팡';
         if (link.includes('gmarket')) return '지마켓';
-        if (link.includes('lotte')) return '롯데';
+        if (link.includes('lotte')) return '롯데온';
         if (link.includes('toss')) return '토스';
         if (link.includes('ohou')) return '오늘의집';
         if (link.includes('wemakeprice')) return '위메프';
         if (link.includes('tmon')) return '티몬';
         if (link.includes('ssg')) return '신세계';
         if (link.includes('cjmall')) return 'CJ';
+        if (link.includes('thirtymall')) return '떠리몰';
         return '상품';
     }
 
