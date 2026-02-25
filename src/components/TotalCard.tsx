@@ -10,10 +10,12 @@ import { formatPrice, getDisplayPrice } from '@/utils/format';
 
 interface TotalCardProps {
     item: any;
+    disableMobileStyle?: boolean;
 }
 
-export default function TotalCard({ item }: TotalCardProps) {
+export default function TotalCard({ item, disableMobileStyle = false }: TotalCardProps) {
     const [isReported, setIsReported] = useState(false);
+    const [isAiExpanded, setIsAiExpanded] = useState(false);
     const [alertMessage, setAlertMessage] = useState<string | null>(null);
     const reportLockRef = useRef(false);
 
@@ -74,22 +76,23 @@ export default function TotalCard({ item }: TotalCardProps) {
             {alertMessage && <CustomAlert message={alertMessage} onClose={() => setAlertMessage(null)} />}
             <CardWrapper $isReported={isReported}>
                 <Item
+                    $disableMobileStyle={disableMobileStyle}
                     href={isReported ? undefined : (item.link || item.url)}
                     as={isReported ? 'div' : 'a'}
                     target={isReported ? undefined : "_blank"}
                     rel={isReported ? undefined : "noopener noreferrer"}
                     onClick={(e: React.MouseEvent) => isReported && e.preventDefault()}
                 >
-                    <PlatformIconWrapper>
+                    <PlatformIconWrapper $disableMobileStyle={disableMobileStyle}>
                         {platformName ? (
                             <PlatformText>{platformName}</PlatformText>
                         ) : (
                             iconSrc && <PlatformIcon src={iconSrc} alt={`${getStoreNameFromUrl(item.link || item.url)} 로고`} />
                         )}
                     </PlatformIconWrapper>
-                    <ItemContent>
+                    <ItemContent $disableMobileStyle={disableMobileStyle}>
                         <ItemTitle>{item.title}</ItemTitle>
-                        <ItemPrice>
+                        <ItemPrice $disableMobileStyle={disableMobileStyle}>
                             <p>{getDisplayPrice(item.discount_price, item.title)}</p>
                             <SavingsText>
                                 정가 대비 {item.savings ? `${formatPrice(item.savings).replace('원', '')}원 ↓` : '가격 정보 없음'}
@@ -101,11 +104,18 @@ export default function TotalCard({ item }: TotalCardProps) {
                         </ItemInfo>
                     </ItemContent>
                     <AIContent>
-                        <AIContentTitle>AI 분석 🦾</AIContentTitle>
-                        <AIContentBody>
-                            <p>• 점수 : {item.score}점/10점</p>
-                            <p>• 추천 : {item.ai_summary}</p>
-                        </AIContentBody>
+                        <AIContentTitle
+                            $disableMobileStyle={disableMobileStyle}
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsAiExpanded(!isAiExpanded); }}
+                        >
+                            AI 분석 🦾 <ToggleIcon $disableMobileStyle={disableMobileStyle}>{isAiExpanded ? '▲' : '▼'}</ToggleIcon>
+                        </AIContentTitle>
+                        <AIContentBodyWrapper $isExpanded={isAiExpanded} $disableMobileStyle={disableMobileStyle}>
+                            <AIContentBody>
+                                <p>• 점수 : {item.score}점/10점</p>
+                                <p>• 추천 : {item.ai_summary}</p>
+                            </AIContentBody>
+                        </AIContentBodyWrapper>
                     </AIContent>
 
                     {isReported && (
@@ -114,7 +124,13 @@ export default function TotalCard({ item }: TotalCardProps) {
                         </ReportedOverlay>
                     )}
                 </Item>
-                <ReportButton onClick={handleReport} disabled={isReported} style={{ visibility: isReported ? 'hidden' : 'visible' }} aria-label="가격 변동 또는 종료 신고">
+                <ReportButton
+                    $disableMobileStyle={disableMobileStyle}
+                    onClick={handleReport}
+                    disabled={isReported}
+                    style={{ visibility: isReported ? 'hidden' : 'visible' }}
+                    aria-label="가격 변동 또는 종료 신고"
+                >
                     변동/종료 신고
                 </ReportButton>
             </CardWrapper>
@@ -136,7 +152,7 @@ const CardWrapper = styled.div<{ $isReported?: boolean }>`
     `}
 `;
 
-const ReportButton = styled.button`
+const ReportButton = styled.button<{ $disableMobileStyle?: boolean }>`
     background: none;
     border: none;
     color: #888;
@@ -152,12 +168,14 @@ const ReportButton = styled.button`
         color: var(--text-primary);
     }
 
-    @media (max-width: 768px) {
-        font-size: 8px;
-    }
+    ${props => !props.$disableMobileStyle && `
+        @media (max-width: 768px) {
+            padding: 2px 0;
+        }
+    `}
 `;
 
-const Item = styled.a`
+const Item = styled.a<{ $disableMobileStyle?: boolean }>`
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -179,6 +197,12 @@ const Item = styled.a`
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
+
+    ${props => !props.$disableMobileStyle && `
+        @media (max-width: 640px) {
+            min-height: 180px;
+        }
+    `}
 `;
 
 const ReportedOverlay = styled.div`
@@ -204,7 +228,7 @@ const ReportedOverlay = styled.div`
     }
 `;
 
-const PlatformIconWrapper = styled.div`
+const PlatformIconWrapper = styled.div<{ $disableMobileStyle?: boolean }>`
     width: 100%;
     height: 150px;
     min-height: 200px;
@@ -212,6 +236,12 @@ const PlatformIconWrapper = styled.div`
     border-top-right-radius: 12px;
     background-color: var(--platform-bg);
     position: relative;
+
+    ${props => !props.$disableMobileStyle && `
+        @media (max-width: 640px) {
+            display: none;
+        }
+    `}
 `;
 
 const PlatformIcon = styled.img`
@@ -234,12 +264,18 @@ const PlatformText = styled.div`
 `;
 
 
-const ItemContent = styled.div`
+const ItemContent = styled.div<{ $disableMobileStyle?: boolean }>`
     display: flex;
     flex-direction: column;
     gap: 20px;
     width: 100%;
     padding: 10px;
+
+    ${props => !props.$disableMobileStyle && `
+        @media (max-width: 640px) {
+            gap: 15px;
+        }
+    `}
 `;
 
 const ItemTitle = styled.h3`
@@ -255,13 +291,20 @@ const ItemTitle = styled.h3`
     -webkit-box-orient: vertical;
 `;
 
-const ItemPrice = styled.div`
+const ItemPrice = styled.div<{ $disableMobileStyle?: boolean }>`
     display: flex;
     flex-direction: column;
     gap: 14px;
     font-size: 26px;
     font-weight: 700;
     color: #e53935;
+
+    ${props => !props.$disableMobileStyle && `
+        @media (max-width: 640px) {
+            flex-direction: row;
+            justify-content: space-between;
+        }
+    `}
 `;
 
 const ItemInfo = styled.div`
@@ -298,10 +341,42 @@ const AIContent = styled.div`
     padding: 10px;
 `;
 
-const AIContentTitle = styled.h4`
+const AIContentTitle = styled.h4<{ $disableMobileStyle?: boolean }>`
     font-size: 13px;
     font-weight: 700;
     color: var(--text-primary);
+
+    ${props => !props.$disableMobileStyle && `
+        @media (max-width: 640px) {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+        }
+    `}
+`;
+
+const ToggleIcon = styled.span<{ $disableMobileStyle?: boolean }>`
+    display: none;
+    font-size: 10px;
+    color: var(--text-secondary);
+    
+    ${props => !props.$disableMobileStyle && `
+        @media (max-width: 640px) {
+            display: inline;
+        }
+    `}
+`;
+
+const AIContentBodyWrapper = styled.div<{ $isExpanded: boolean, $disableMobileStyle?: boolean }>`
+    display: block;
+    
+    ${props => !props.$disableMobileStyle && `
+        @media (max-width: 640px) {
+            display: ${props.$isExpanded ? 'block' : 'none'};
+        }
+    `}
 `;
 
 const AIContentBody = styled.div`

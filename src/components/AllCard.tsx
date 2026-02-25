@@ -57,6 +57,7 @@ export default function AllCard({ items }: AllCardProps) {
 
 function AllCardItem({ item, index }: { item: any, index: number }) {
     const [isReported, setIsReported] = useState(false);
+    const [isAiExpanded, setIsAiExpanded] = useState(false);
     const [alertMessage, setAlertMessage] = useState<string | null>(null);
     const reportLockRef = useRef(false);
 
@@ -149,11 +150,15 @@ function AllCardItem({ item, index }: { item: any, index: number }) {
                         </ItemInfo>
                     </ItemContent>
                     <AIContent>
-                        <AIContentTitle>AI 분석 🦾</AIContentTitle>
-                        <AIContentBody>
-                            <p>• 점수 : {item.score}점/10점</p>
-                            <p>• 추천 : {item.ai_summary}</p>
-                        </AIContentBody>
+                        <AIContentTitle onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsAiExpanded(!isAiExpanded); }}>
+                            AI 분석 🦾 <ToggleIcon>{isAiExpanded ? '▲' : '▼'}</ToggleIcon>
+                        </AIContentTitle>
+                        <AIContentBodyWrapper $isExpanded={isAiExpanded}>
+                            <AIContentBody>
+                                <p>• 점수 : {item.score}점/10점</p>
+                                <p>• 추천 : {item.ai_summary}</p>
+                            </AIContentBody>
+                        </AIContentBodyWrapper>
                     </AIContent>
 
                     {isReported && (
@@ -183,6 +188,32 @@ const AIContentTitle = styled.h5`
     font-size: 13px;
     font-weight: 700;
     color: var(--text-primary);
+
+    @media (max-width: 640px) {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+    }
+`;
+
+const ToggleIcon = styled.span`
+    display: none;
+    font-size: 10px;
+    color: var(--text-secondary);
+    
+    @media (max-width: 640px) {
+        display: inline;
+    }
+`;
+
+const AIContentBodyWrapper = styled.div<{ $isExpanded: boolean }>`
+    display: block;
+    
+    @media (max-width: 640px) {
+        display: ${props => props.$isExpanded ? 'block' : 'none'};
+    }
 `;
 
 const AIContentBody = styled.div`

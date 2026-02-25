@@ -119,7 +119,7 @@ export default function RecommendationContainer({ result }: RecommendationContai
                     return (
                         <BestCardWrapper key={item.id} $rank={rank} $totalCount={top3.length}>
                             <RankBadge $rank={rank}>{rank}위</RankBadge>
-                            <TotalCard item={item} />
+                            <TotalCard item={item} disableMobileStyle={true} />
                         </BestCardWrapper>
                     );
                 })}
@@ -150,6 +150,10 @@ const Container = styled.div`
   @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    gap: 20px;
   }
 `;
 
@@ -314,6 +318,10 @@ const OtherTitle = styled.h3`
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 20px;
+
+    @media (max-width: 640px) {
+        margin-bottom: 0;
+    }
 `;
 
 const Grid = styled.div`
