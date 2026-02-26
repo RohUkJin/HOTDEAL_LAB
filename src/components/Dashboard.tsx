@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import IntroContainer from './IntroConatiner';
 import CategoryContainer from './CategoryContainer';
@@ -26,6 +26,14 @@ export default function Dashboard() {
     setIsRecommendationsActive(false);
     setRecommendationResult(null);
   };
+
+  useEffect(() => {
+    const handleResetEvent = () => {
+      handleReset();
+    };
+    window.addEventListener('resetDashboard', handleResetEvent);
+    return () => window.removeEventListener('resetDashboard', handleResetEvent);
+  }, []);
 
   return (
     <Container>

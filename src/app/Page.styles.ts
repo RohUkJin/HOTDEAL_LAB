@@ -39,11 +39,6 @@ export const HeaderContainer = styled.div`
     margin-bottom: 20px;
 `;
 
-export const LogoTitleGroup = styled.div`
-    display: flex;
-    align-items: center;
-`;
-
 export const LogoWrapper = styled.div`
     width: 50px;
     height: 50px;
