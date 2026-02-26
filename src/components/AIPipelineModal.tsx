@@ -141,26 +141,28 @@ const PipelineGrid = styled.div`
     justify-content: space-between;
     gap: 16px;
 
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
         flex-direction: column;
-        gap: 24px;
+        gap: 20px;
         align-items: center;
     }
 `;
 
 const Arrow = styled.div`
-    color: var(--border);
+    color: var(--primary);
     font-size: 24px;
     align-self: center;
+    opacity: 0.5;
 
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
         transform: rotate(90deg);
+        margin: -8px 0;
     }
 `;
 
 const StepCard = styled.div`
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     padding: 24px 20px;
     display: flex;
@@ -169,12 +171,18 @@ const StepCard = styled.div`
     text-align: center;
     flex: 1;
     position: relative;
-    transition: transform 0.3s, background 0.3s;
+    transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+
+    @media (max-width: 900px) {
+        width: 100%;
+        padding: 20px 16px;
+    }
 
     &:hover {
         transform: translateY(-5px);
-        background: rgba(0, 200, 83, 0.05);
-        border-color: rgba(0, 200, 83, 0.3);
+        background: rgba(0, 200, 83, 0.08);
+        border-color: rgba(0, 200, 83, 0.4);
+        box-shadow: 0 8px 16px rgba(0, 200, 83, 0.15);
     }
 `;
 
@@ -211,19 +219,24 @@ const StepTitle = styled.h3`
 `;
 
 const StepDesc = styled.p`
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.5;
+    font-size: 14.5px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
     word-break: keep-all;
+    font-weight: 400;
 `;
 
 const BottomNote = styled.div`
-    margin-top: 40px;
+    margin-top: 32px;
     text-align: center;
-    font-size: 14px;
-    color: var(--text-secondary);
-    background: rgba(255, 255, 255, 0.02);
-    padding: 16px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #e0e0e0;
+    background: rgba(0, 200, 83, 0.1);
+    padding: 18px 20px;
     border-radius: 12px;
-    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 200, 83, 0.2);
+    word-break: keep-all;
+    line-height: 1.5;
 `;
+
