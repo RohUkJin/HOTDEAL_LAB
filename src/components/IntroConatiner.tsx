@@ -27,6 +27,12 @@ export default function IntroContainer({ onAIComplete }: IntroContainerProps) {
     fetchCrawlStats();
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 640) {
+      setIsDetailsOpen(false);
+    }
+  }, []);
+
   const stats = crawlStats[0] || {};
   const totalItems = stats.total_items || 0;
   const hotdealItems = stats.hotdeal_items || 0;
