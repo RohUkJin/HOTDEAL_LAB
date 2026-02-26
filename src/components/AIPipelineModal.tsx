@@ -94,7 +94,7 @@ const ModalContainer = styled(motion.div)`
     border-radius: 24px;
     padding: 40px;
     width: 90%;
-    max-width: 900px;
+    max-width: 1200px;
     position: relative;
     box-shadow: 0 24px 48px rgba(0,0,0,0.4);
     color: var(--text-primary);
