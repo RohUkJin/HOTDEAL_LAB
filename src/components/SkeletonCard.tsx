@@ -36,6 +36,10 @@ const CardWrapper = styled.div`
     height: 100%;
     min-height: 400px;
     gap: 8px;
+
+    @media (max-width: 640px) {
+        min-height: 106px;
+    }
 `;
 
 const SkeletonItem = styled.div`
@@ -47,6 +51,11 @@ const SkeletonItem = styled.div`
     background-color: var(--card-bg);
     border: 1px solid var(--border);
     overflow: hidden;
+
+    @media (max-width: 640px) {
+        flex-direction: row;
+        height: 106px;
+    }
 `;
 
 const ImagePlaceholder = styled.div`
@@ -54,6 +63,15 @@ const ImagePlaceholder = styled.div`
     height: 200px;
     ${skeletonAnimation}
     border-bottom: 1px solid var(--border);
+
+    @media (max-width: 640px) {
+        width: 106px;
+        min-width: 106px;
+        height: 106px;
+        border-bottom: none;
+        border-right: 1px solid var(--border);
+        border-radius: 12px 0 0 12px;
+    }
 `;
 
 const ContentPlaceholder = styled.div`
@@ -62,6 +80,12 @@ const ContentPlaceholder = styled.div`
     flex-direction: column;
     gap: 12px;
     flex: 1;
+
+    @media (max-width: 640px) {
+        padding: 10px;
+        gap: 8px;
+        justify-content: center;
+    }
 `;
 
 const TitleLine = styled.div`
@@ -69,6 +93,10 @@ const TitleLine = styled.div`
     width: 100%;
     border-radius: 4px;
     ${skeletonAnimation}
+
+    @media (max-width: 640px) {
+        height: 14px;
+    }
 `;
 
 const PriceLine = styled.div`
@@ -77,6 +105,11 @@ const PriceLine = styled.div`
     border-radius: 4px;
     margin-top: 10px;
     ${skeletonAnimation}
+
+    @media (max-width: 640px) {
+        height: 20px;
+        margin-top: 4px;
+    }
 `;
 
 const InfoLine = styled.div`
@@ -85,4 +118,9 @@ const InfoLine = styled.div`
     border-radius: 4px;
     margin-top: auto;
     ${skeletonAnimation}
+
+    @media (max-width: 640px) {
+        height: 16px;
+        margin-top: auto;
+    }
 `;

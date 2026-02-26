@@ -90,7 +90,12 @@ const SkeletonGrid = styled.div`
     display: flex;
     gap: 20px;
     padding-bottom: 20px;
-    overflow: hidden;
+    overflow-x: auto;
+    
+    @media (max-width: 640px) {
+        flex-direction: column;
+        overflow-x: hidden;
+    }
 `;
 
 const SkeletonWrapper = styled.div`
@@ -98,7 +103,8 @@ const SkeletonWrapper = styled.div`
     flex: 1;
     
     @media (max-width: 640px) {
-        min-width: 85%; 
+        min-width: 100%; 
+        width: 100%;
     }
 `;
 
