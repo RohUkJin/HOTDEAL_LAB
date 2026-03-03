@@ -46,6 +46,16 @@ export const cleanTitle = (title: string): string => {
     // 4. 중복된 공백 정리
     cleaned = cleaned.replace(/\s{2,}/g, ' ').trim();
 
+    // 5. 괄호 짝 맞추기
+    // 열린 괄호 '(' 수와 닫힌 괄호 ')' 수를 세어서, 열린 괄호가 더 많으면 뒤에 ')' 추가
+    const openParensCount = (cleaned.match(/\(/g) || []).length;
+    const closeParensCount = (cleaned.match(/\)/g) || []).length;
+
+    if (openParensCount > closeParensCount) {
+        // 모자란 만큼 닫는 괄호 추가
+        cleaned += ')'.repeat(openParensCount - closeParensCount);
+    }
+
     return cleaned;
 };
 
