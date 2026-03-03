@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import { addReportedItem, isItemReported } from '@/utils/storage';
 import { getStoreNameFromUrl } from '@/utils/accessibility';
-import { formatPrice, getDisplayPrice } from '@/utils/format';
+import { formatPrice, getDisplayPrice, cleanTitle } from '@/utils/format';
 import CustomAlert from './CustomAlert';
 
 import 'swiper/css';
@@ -115,6 +115,9 @@ function AllCardItem({ item, index }: { item: any, index: number }) {
     const platformName = getPlatformName(item.link || item.url);
     const iconSrc = null;
 
+    const getNumericValue = (val: any) => Number(String(val || '0').replace(/[^0-9]/g, ''));
+    const isLargePrice = getNumericValue(item.discount_price) >= 1000000 || getNumericValue(item.savings) >= 1000000;
+
     const handleReport = async (e: React.MouseEvent) => {
         e.stopPropagation();
 
@@ -153,16 +156,16 @@ function AllCardItem({ item, index }: { item: any, index: number }) {
                         )}
                     </PlatformIconWrapper>
                     <ItemContent>
-                        <ItemTitle>{item.title}</ItemTitle>
-                        <ItemPrice>
+                        <ItemTitle>{cleanTitle(item.title)}</ItemTitle>
+                        <ItemPrice $isLarge={isLargePrice}>
                             <p>{getDisplayPrice(item.discount_price, item.title)}</p>
-                            <SavingsText>
+                            <SavingsText $isLarge={isLargePrice}>
                                 정가 대비 {item.savings ? `${formatPrice(item.savings).replace('원', '')}원 ↓` : '가격 정보 없음'}
                             </SavingsText>
                         </ItemPrice>
                         <ItemInfo>
-                            <p>추천수 {item.votes}</p>
-                            <p>댓글수 {item.comment_count}</p>
+                            <p>커뮤니티 추천 {item.votes}</p>
+                            <p>커뮤니티 댓글 {item.comment_count}</p>
                         </ItemInfo>
                     </ItemContent>
                     <AIContent>
@@ -412,11 +415,11 @@ const ItemTitle = styled.h4`
     -webkit-box-orient: vertical;
 `;
 
-const ItemPrice = styled.div`
+const ItemPrice = styled.div<{ $isLarge?: boolean }>`
     display: flex;
     align-items: flex-end;
     gap: 14px;
-    font-size: 26px;
+    font-size: ${props => props.$isLarge ? '24px' : '26px'};
     font-weight: 700;
     color: #e53935;
 `;
@@ -436,11 +439,11 @@ const ItemInfo = styled.div`
     }   
 `;
 
-const SavingsText = styled.div`
+const SavingsText = styled.div<{ $isLarge?: boolean }>`
     display: flex;
     align-items: center;
     gap: 4px;
-    font-size: 11px;
+    font-size: ${props => props.$isLarge ? '9px' : '11px'};
     font-weight: 700;
     color: var(--text-secondary);
     opacity: 0.8;

@@ -12,6 +12,33 @@ export const formatPrice = (price: string | number | null | undefined): string =
     return `${parsedPrice.toLocaleString()}원`;
 };
 
+export const cleanTitle = (title: string): string => {
+    if (!title) return '';
+
+    let cleaned = title;
+
+    // 1. 맨 앞의 [쇼핑몰명] 제거 (예: [지마켓], [네이버] 등)
+    // ^\[.*?\] : 문자열 시작부터 처음 나타나는 대괄호 묶음
+    // \s* : 그 뒤에 따라오는 공백까지 포함하여 제거
+    cleaned = cleaned.replace(/^\[.*?\]\s*/, '');
+
+    // 2. 가격 + 무료배송/무배 텍스트 제거
+    // 예: "18,900원/무배", "10000원 무료배송", "2만원 무배", "(무배)", "[무배]"
+    // 정규식 설명:
+    // (?:[0-9,]+(?:만)?원?)? : 앞부분에 숫자로 된 가격 + '만원' 또는 '원'이 있을 수 있음 (선택적)
+    // (?:\/|\||-|\s)? : 슬래시, 파이프, 하이픈, 공백 등의 구분자가 있을 수 있음 (선택적)
+    // \[?\(?무(?:료)?배(?:송)?\)?\]? : '무배', '무료배송' 텍스트 (앞뒤에 괄호나 대괄호가 있을 수 있음)
+    // 뒤에 따라오는 불필요한 공백 제거
+    const shippingRegex = /(?:[0-9,]+(?:만)?원?)?(?:\/|\||-|\s)?\[?\(?무(?:료)?배(?:송)?\)?\]?\s*/gi;
+
+    cleaned = cleaned.replace(shippingRegex, '');
+
+    // 3. 중복된 공백 정리
+    cleaned = cleaned.replace(/\s{2,}/g, ' ').trim();
+
+    return cleaned;
+};
+
 export const extractPriceFromTitle = (title: string): number | null => {
     if (!title) return null;
 

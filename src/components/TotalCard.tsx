@@ -6,7 +6,7 @@ import CustomAlert from './CustomAlert';
 import styled from 'styled-components';
 import { addReportedItem, isItemReported } from '@/utils/storage';
 import { getStoreNameFromUrl } from '@/utils/accessibility';
-import { formatPrice, getDisplayPrice } from '@/utils/format';
+import { formatPrice, getDisplayPrice, cleanTitle } from '@/utils/format';
 
 interface TotalCardProps {
     item: any;
@@ -52,6 +52,9 @@ export default function TotalCard({ item, disableMobileStyle = false }: TotalCar
     const platformName = getPlatformName(item.link || item.url);
     const iconSrc = null;
 
+    const getNumericValue = (val: any) => Number(String(val || '0').replace(/[^0-9]/g, ''));
+    const isLargePrice = getNumericValue(item.discount_price) >= 1000000 || getNumericValue(item.savings) >= 1000000;
+
     const handleReport = async (e: React.MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
@@ -91,16 +94,16 @@ export default function TotalCard({ item, disableMobileStyle = false }: TotalCar
                         )}
                     </PlatformIconWrapper>
                     <ItemContent $disableMobileStyle={disableMobileStyle}>
-                        <ItemTitle>{item.title}</ItemTitle>
-                        <ItemPrice $disableMobileStyle={disableMobileStyle}>
+                        <ItemTitle>{cleanTitle(item.title)}</ItemTitle>
+                        <ItemPrice $disableMobileStyle={disableMobileStyle} $isLarge={isLargePrice}>
                             <p>{getDisplayPrice(item.discount_price, item.title)}</p>
-                            <SavingsText>
+                            <SavingsText $isLarge={isLargePrice}>
                                 정가 대비 {item.savings ? `${formatPrice(item.savings).replace('원', '')}원 ↓` : '가격 정보 없음'}
                             </SavingsText>
                         </ItemPrice>
                         <ItemInfo>
-                            <p>추천수 {item.votes}</p>
-                            <p>댓글수 {item.comment_count}</p>
+                            <p>커뮤니티 추천 {item.votes}</p>
+                            <p>커뮤니티 댓글 {item.comment_count}</p>
                         </ItemInfo>
                     </ItemContent>
                     <AIContent>
@@ -108,7 +111,7 @@ export default function TotalCard({ item, disableMobileStyle = false }: TotalCar
                             $disableMobileStyle={disableMobileStyle}
                             onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsAiExpanded(!isAiExpanded); }}
                         >
-                            AI 분석 🦾 <ToggleIcon $disableMobileStyle={disableMobileStyle}>{isAiExpanded ? '▲' : '▼'}</ToggleIcon>
+                            AI 분석 🦾 <ToggleIcon $disableMobileStyle={disableMobileStyle} $isExpanded={isAiExpanded}>▼</ToggleIcon>
                         </AIContentTitle>
                         <AIContentBodyWrapper $isExpanded={isAiExpanded} $disableMobileStyle={disableMobileStyle}>
                             <AIContentBody>
@@ -291,11 +294,11 @@ const ItemTitle = styled.h3`
     -webkit-box-orient: vertical;
 `;
 
-const ItemPrice = styled.div<{ $disableMobileStyle?: boolean }>`
+const ItemPrice = styled.div<{ $disableMobileStyle?: boolean; $isLarge?: boolean }>`
     display: flex;
     flex-direction: column;
     gap: 14px;
-    font-size: 26px;
+    font-size: ${props => props.$isLarge ? '24px' : '26px'};
     font-weight: 700;
     color: #e53935;
 
@@ -322,11 +325,11 @@ const ItemInfo = styled.div`
     }   
 `;
 
-const SavingsText = styled.div`
+const SavingsText = styled.div<{ $isLarge?: boolean }>`
     display: flex;
     align-items: center;
     gap: 4px;
-    font-size: 11px;
+    font-size: ${props => props.$isLarge ? '9px' : '11px'};
     font-weight: 700;
     color: var(--text-secondary);
     opacity: 0.8;
@@ -357,24 +360,32 @@ const AIContentTitle = styled.h4<{ $disableMobileStyle?: boolean }>`
     `}
 `;
 
-const ToggleIcon = styled.span<{ $disableMobileStyle?: boolean }>`
+const ToggleIcon = styled.span<{ $disableMobileStyle?: boolean; $isExpanded?: boolean }>`
     display: none;
     font-size: 10px;
     color: var(--text-secondary);
+    transition: transform 0.3s ease;
     
     ${props => !props.$disableMobileStyle && `
         @media (max-width: 640px) {
-            display: inline;
+            display: inline-block;
+            transform: ${props.$isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'};
         }
     `}
 `;
 
-const AIContentBodyWrapper = styled.div<{ $isExpanded: boolean, $disableMobileStyle?: boolean }>`
+const AIContentBodyWrapper = styled.div<{ $isExpanded: boolean; $disableMobileStyle?: boolean }>`
     display: block;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, margin-top 0.3s ease-in-out;
+    max-height: 500px;
+    opacity: 1;
     
     ${props => !props.$disableMobileStyle && `
         @media (max-width: 640px) {
-            display: ${props.$isExpanded ? 'block' : 'none'};
+            max-height: ${props.$isExpanded ? '500px' : '0'};
+            opacity: ${props.$isExpanded ? '1' : '0'};
+            margin-top: ${props.$isExpanded ? '4px' : '0'};
         }
     `}
 `;

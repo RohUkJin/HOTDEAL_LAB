@@ -118,7 +118,7 @@ export default function IntroContainer({ onAIComplete }: IntroContainerProps) {
             <PipelineArrow>▶</PipelineArrow>
 
             <PipelineStep>
-              <StepLabel>1-3차 필터링 후</StepLabel>
+              <StepLabel>1-2차 필터링 후</StepLabel>
               <StepBar $width={60} $color="#666" />
               <StepValue>{stats.filtered_items}</StepValue>
             </PipelineStep>
@@ -126,7 +126,7 @@ export default function IntroContainer({ onAIComplete }: IntroContainerProps) {
             <PipelineArrow>▶</PipelineArrow>
 
             <PipelineStep>
-              <StepLabel>AI 확정 후</StepLabel>
+              <StepLabel>3차 AI 확정 후</StepLabel>
               <StepBar $width={30} $color="#00c853" />
               <StepValue>{hotdealItems}</StepValue>
             </PipelineStep>
