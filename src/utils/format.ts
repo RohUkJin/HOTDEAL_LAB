@@ -33,7 +33,17 @@ export const cleanTitle = (title: string): string => {
 
     cleaned = cleaned.replace(shippingRegex, '');
 
-    // 3. 중복된 공백 정리
+    // 3. 꼬리 부분에 남은 의미없는 괄호 및 특수문자 제거 (예: "(", "(/", "(3,000원/" 등 가격 정보가 잘려나간 흔적)
+    // 맨 끝에 있는 '(', '/', '-', '|' 및 공백 제거
+    cleaned = cleaned.replace(/[\(\/\-\|\s]+$/g, '');
+
+    // 만약 "(가격/" 같은 형태가 맨 끝에 남았다면 (예: "도루코 3d모션 7중날 면도기 (3,000원/")
+    cleaned = cleaned.replace(/\([0-9,]+(?:만)?원?[\/\-\|\s]*$/g, '');
+
+    // 맨 끝에 다시 남은 특수문자 정리
+    cleaned = cleaned.replace(/[\(\/\-\|\s]+$/g, '');
+
+    // 4. 중복된 공백 정리
     cleaned = cleaned.replace(/\s{2,}/g, ' ').trim();
 
     return cleaned;
